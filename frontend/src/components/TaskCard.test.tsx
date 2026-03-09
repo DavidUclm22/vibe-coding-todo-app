@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, it, expect, vi } from "vitest";
 import TaskCard from "./TaskCard";
-import { mockItems } from "../test/mock-data";
+import { mockItems, createMockItem } from "../test/mock-data";
 
 describe("TaskCard", () => {
   const defaultProps = {
@@ -121,5 +121,64 @@ describe("TaskCard", () => {
     expect(taskCard).toHaveClass("group");
     expect(taskCard).toHaveClass("rounded-lg");
     expect(taskCard).toHaveClass("cursor-grab");
+  });
+
+  describe("due date display", () => {
+    it("does not render due date when not set", () => {
+      render(<TaskCard {...defaultProps} item={mockItems.simple} />);
+      expect(
+        screen.queryByTestId(`task-due-date-${mockItems.simple.id}`),
+      ).not.toBeInTheDocument();
+    });
+
+    it("renders due date when set", () => {
+      const itemWithDueDate = createMockItem({
+        id: 10,
+        due_date: "2099-12-31",
+      });
+      render(<TaskCard {...defaultProps} item={itemWithDueDate} />);
+      expect(
+        screen.getByTestId(`task-due-date-${itemWithDueDate.id}`),
+      ).toBeInTheDocument();
+    });
+
+    it("applies green color when due date is more than 3 days away", () => {
+      const future = new Date();
+      future.setDate(future.getDate() + 10);
+      const dueDateStr = future.toISOString().slice(0, 10);
+      const item = createMockItem({ id: 11, due_date: dueDateStr });
+      render(<TaskCard {...defaultProps} item={item} />);
+      const el = screen.getByTestId(`task-due-date-${item.id}`);
+      expect(el).toHaveClass("text-green-600");
+    });
+
+    it("applies orange color when due date is between 1 and 3 days away", () => {
+      const future = new Date();
+      future.setDate(future.getDate() + 2);
+      const dueDateStr = future.toISOString().slice(0, 10);
+      const item = createMockItem({ id: 12, due_date: dueDateStr });
+      render(<TaskCard {...defaultProps} item={item} />);
+      const el = screen.getByTestId(`task-due-date-${item.id}`);
+      expect(el).toHaveClass("text-orange-500");
+    });
+
+    it("applies red color when due date has passed", () => {
+      const past = new Date();
+      past.setDate(past.getDate() - 1);
+      const dueDateStr = past.toISOString().slice(0, 10);
+      const item = createMockItem({ id: 13, due_date: dueDateStr });
+      render(<TaskCard {...defaultProps} item={item} />);
+      const el = screen.getByTestId(`task-due-date-${item.id}`);
+      expect(el).toHaveClass("text-red-600");
+    });
+
+    it("applies red color when due date is today (less than 1 day away)", () => {
+      const today = new Date();
+      const dueDateStr = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+      const item = createMockItem({ id: 14, due_date: dueDateStr });
+      render(<TaskCard {...defaultProps} item={item} />);
+      const el = screen.getByTestId(`task-due-date-${item.id}`);
+      expect(el).toHaveClass("text-red-600");
+    });
   });
 });

@@ -80,6 +80,7 @@ function App() {
   const createItem = async (data: {
     name: string;
     description: string;
+    due_date: string | null;
     tag_ids: number[];
   }) => {
     try {
@@ -91,6 +92,7 @@ function App() {
         body: JSON.stringify({
           name: data.name,
           description: data.description || "Created from React frontend",
+          due_date: data.due_date || null,
           tag_ids: data.tag_ids,
         }),
       });
@@ -145,6 +147,7 @@ function App() {
   const updateItem = async (data: {
     name: string;
     description: string;
+    due_date: string | null;
     tag_ids: number[];
   }) => {
     if (!editingItem) return;
@@ -158,6 +161,7 @@ function App() {
         body: JSON.stringify({
           name: data.name,
           description: data.description,
+          due_date: data.due_date || null,
           tag_ids: data.tag_ids,
         }),
       });
