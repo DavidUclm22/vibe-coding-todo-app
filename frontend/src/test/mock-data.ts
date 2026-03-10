@@ -12,20 +12,23 @@ export const mockItems = {
     name: "Simple Task",
     description: "A simple task",
     tags: [],
+    due_date: null,
   },
   withDescription: {
     id: 2,
     name: "Task with Description",
     description: "This is a detailed description",
     tags: [],
+    due_date: null,
   },
   withTags: {
     id: 3,
     name: "Task with Tags",
     description: "Has multiple tags",
     tags: [mockTags.bug, mockTags.feature],
+    due_date: null,
   },
-  minimal: { id: 4, name: "Minimal", description: "", tags: [] },
+  minimal: { id: 4, name: "Minimal", description: "", tags: [], due_date: null },
 };
 
 export function createMockItem(overrides?: Partial<Item>): Item {

@@ -12,6 +12,7 @@ def create_item_entity(
     description: str = "Test Description",
     created_at: datetime | None = None,
     updated_at: datetime | None = None,
+    due_date: datetime | None = None,
 ) -> Item:
     """Create a test Item entity"""
     return Item(
@@ -20,6 +21,7 @@ def create_item_entity(
         description=description,
         created_at=created_at or datetime(2024, 1, 1, 12, 0, 0),
         updated_at=updated_at,
+        due_date=due_date,
     )
 
 
@@ -29,6 +31,7 @@ def create_item_dto(
     description: str = "Test Description",
     created_at: datetime | None = None,
     updated_at: datetime | None = None,
+    due_date: datetime | None = None,
 ) -> ItemDTO:
     """Create a test ItemDTO"""
     return ItemDTO(
@@ -37,6 +40,7 @@ def create_item_dto(
         description=description,
         created_at=created_at or datetime(2024, 1, 1, 12, 0, 0),
         updated_at=updated_at,
+        due_date=due_date,
         tags=[],
     )
 
@@ -45,12 +49,14 @@ def create_item_create_dto(
     name: str = "Test Item",
     description: str = "Test Description",
     tag_ids: list[int] | None = None,
+    due_date: datetime | None = None,
 ) -> ItemCreateDTO:
     """Create a test ItemCreateDTO"""
     return ItemCreateDTO(
         name=name,
         description=description,
         tag_ids=tag_ids or [],
+        due_date=due_date,
     )
 
 
@@ -58,10 +64,12 @@ def create_item_update_dto(
     name: str | None = "Updated Item",
     description: str | None = "Updated Description",
     tag_ids: list[int] | None = None,
+    due_date: datetime | None = None,
 ) -> ItemUpdateDTO:
     """Create a test ItemUpdateDTO"""
     return ItemUpdateDTO(
         name=name,
         description=description,
         tag_ids=tag_ids,
+        due_date=due_date,
     )
